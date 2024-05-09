@@ -3,12 +3,14 @@ import { RouterOutlet } from '@angular/router';
 import { LeafletModule } from '@asymmetrik/ngx-leaflet';
 import { MapOptions, circle, icon, latLng, marker, polygon, tileLayer } from 'leaflet';
 import {FormsModule} from "@angular/forms";
-import {NgIf} from "@angular/common";
+import {DecimalPipe, NgIf} from "@angular/common";
+import * as turf from '@turf/turf';
+
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, LeafletModule, FormsModule, NgIf],
+  imports: [RouterOutlet, LeafletModule, FormsModule, NgIf, DecimalPipe],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })
@@ -53,6 +55,17 @@ export class AppComponent implements OnInit, AfterViewInit {
 
     this.options.center = latLng(latitude,longitude)
 
+    const userLocationMarker = marker(
+      [latitude, longitude],
+      {
+        icon: icon({
+          iconUrl: 'https://example.com/user-location-icon.png',
+          iconSize: [38, 38]
+        })
+      }
+    );
+    this.layers.push(userLocationMarker);
+
     console.log(`Latitude: ${latitude}, Longitude: ${longitude}`);
   }
 
@@ -80,7 +93,7 @@ export class AppComponent implements OnInit, AfterViewInit {
       [lat, lng],
       {
         icon: icon({
-          iconUrl: 'https://png.pngtree.com/element_our/sm/20180526/sm_5b09436fd0515.png',
+          iconUrl: 'https://example.com/user-location-icon.png',
           iconSize: [38, 38]
         })
       }
@@ -106,5 +119,18 @@ export class AppComponent implements OnInit, AfterViewInit {
   clearCoordinates() {
     this.selectedCoordinates = [];
     this.layers = [];
+  }
+
+  calculateArea() {
+    if (this.selectedCoordinates.length < 3) {
+      return 0;
+    }
+
+    const coords = this.selectedCoordinates.map(coord => [coord.lng, coord.lat]);
+    coords.push(coords[0]);
+
+    const areaOfCoordinate = turf.polygon([coords]);
+    const area = turf.area(areaOfCoordinate);
+    return area;
   }
 }
