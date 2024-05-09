@@ -1,6 +1,6 @@
 {
   "hosting": {
-    "public": "dist/openstreetmap-area-calculator",
+    "public": "dist/openstreetmap-area-calculator/browser",
     "ignore": [
       "firebase.json",
       "**/.*",
