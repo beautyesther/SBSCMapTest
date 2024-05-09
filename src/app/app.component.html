@@ -7,57 +7,59 @@
          (leafletClick)="onMapClick($event)"
     >
     </div>
+
+  <div class="container">
+    <div class="coordinate-form">
+      <h2>Enter Coordinates Manually:</h2>
+      <form (ngSubmit)="addCoordinate()">
+        <div class="form-group">
+          <label for="latitude">Latitude:</label>
+          <input type="text" id="latitude" [(ngModel)]="manualLatitude" name="latitude" placeholder="Enter latitude" required>
+        </div>
+        <div class="form-group">
+          <label for="longitude">Longitude:</label>
+          <input type="text" id="longitude" [(ngModel)]="manualLongitude" name="longitude" placeholder="Enter longitude" required>
+        </div>
+        <button type="submit">Add Coordinate</button>
+      </form>
+    </div>
+    <div class="coordinates-table">
+      <div *ngIf="selectedCoordinates.length > 0">
+        <h2>Selected Coordinates:</h2>
+        <div class="table-div">
+          <table>
+            <thead>
+            <tr>
+              <th>S/N</th>
+              <th>Latitude</th>
+              <th>Longitude</th>
+            </tr>
+            </thead>
+            <tbody>
+              @for (coord of selectedCoordinates; track $index) {
+                <tr>
+                  <td>{{ $index + 1 }}</td>
+                  <td>{{ coord.lat }}</td>
+                  <td>{{ coord.lng }}</td>
+                </tr>
+              }
+
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div *ngIf="selectedCoordinates.length < 1">
+        <h4 class="no-coordinates">No coordinates selected yet. Click on the map to select a coordinate or enter coordinates manually</h4>
+      </div>
+    </div>
+
+  </div>
+
 } @else {
   <h1 class="location-permission">You need to allow location permission first</h1>
 }
 
-<div class="container">
-  <div class="coordinate-form">
-    <h2>Enter Coordinates Manually:</h2>
-    <form (ngSubmit)="addCoordinate()">
-      <div class="form-group">
-        <label for="latitude">Latitude:</label>
-        <input type="text" id="latitude" [(ngModel)]="manualLatitude" name="latitude" placeholder="Enter latitude" required>
-      </div>
-      <div class="form-group">
-        <label for="longitude">Longitude:</label>
-        <input type="text" id="longitude" [(ngModel)]="manualLongitude" name="longitude" placeholder="Enter longitude" required>
-      </div>
-      <button type="submit">Add Coordinate</button>
-    </form>
-  </div>
-  <div class="coordinates-table">
-    <div *ngIf="selectedCoordinates.length > 0">
-      <h2>Selected Coordinates:</h2>
-     <div class="table-div">
-       <table>
-         <thead>
-         <tr>
-           <th>S/N</th>
-           <th>Latitude</th>
-           <th>Longitude</th>
-         </tr>
-         </thead>
-         <tbody>
-           @for (coord of selectedCoordinates; track $index) {
-             <tr>
-               <td>{{ $index + 1 }}</td>
-               <td>{{ coord.lat }}</td>
-               <td>{{ coord.lng }}</td>
-             </tr>
-           }
-
-         </tbody>
-       </table>
-     </div>
-    </div>
-
-    <div *ngIf="selectedCoordinates.length < 1">
-      <h4 class="no-coordinates">No coordinates selected yet. Click on the map to select a coordinate or enter coordinates manually</h4>
-    </div>
-  </div>
-
-</div>
 
 
 
