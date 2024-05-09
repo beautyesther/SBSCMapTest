@@ -2,11 +2,13 @@ import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { LeafletModule } from '@asymmetrik/ngx-leaflet';
 import { MapOptions, circle, icon, latLng, marker, polygon, tileLayer } from 'leaflet';
+import {FormsModule} from "@angular/forms";
+import {NgIf} from "@angular/common";
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, LeafletModule],
+  imports: [RouterOutlet, LeafletModule, FormsModule, NgIf],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })
@@ -15,6 +17,8 @@ export class AppComponent implements OnInit, AfterViewInit {
   layers: any[] = [];
   selectedCoordinates: any[] = []
   markers: any[] = [];
+  manualLatitude: string = '';
+  manualLongitude: string = '';
 
   constructor() {
   }
@@ -32,6 +36,7 @@ export class AppComponent implements OnInit, AfterViewInit {
     this.getUserLocation()
   }
 
+
   getUserLocation() {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition((r) => this.showPosition(r), this.showError);
@@ -47,7 +52,7 @@ export class AppComponent implements OnInit, AfterViewInit {
     console.log('QWERTYUIOP', this.options)
 
     this.options.center = latLng(latitude,longitude)
-  
+
     console.log(`Latitude: ${latitude}, Longitude: ${longitude}`);
   }
 
@@ -84,6 +89,17 @@ export class AppComponent implements OnInit, AfterViewInit {
 
     if (this.options && this.options.layers) {
       this.options.layers.push(markerIcon);
+    }
+  }
+
+  addCoordinate() {
+    const lat = parseFloat(this.manualLatitude);
+    const lng = parseFloat(this.manualLongitude);
+
+    if (!isNaN(lat) && !isNaN(lng)) {
+      this.selectedCoordinates.push({ lat, lng });
+      this.manualLatitude = '';
+      this.manualLongitude = '';
     }
   }
 }
