@@ -102,4 +102,9 @@ export class AppComponent implements OnInit, AfterViewInit {
       this.manualLongitude = '';
     }
   }
+
+  clearCoordinates() {
+    this.selectedCoordinates = [];
+    this.layers = [];
+  }
 }
